@@ -82,7 +82,7 @@ def crawling():
             crawled.append(page)
             content = get_page(page)
             print content
-            # print 'content above is used to check whether we need Captcha'
+            print '$$$$$$$$$$$$$$$$$$$$$$', page
             soup = BeautifulSoup(content, 'html.parser')
             print '#', count, page
 
@@ -114,6 +114,7 @@ if __name__ == '__main__':
         for j in i.findAll('a', {'class': 'a-link-nav-icon'}):
             page =urlparse.urljoin(seed, j.get('href', ''))
             q.put(page)
+            print page
     print 'getting categories done'
 
     #Start to get book page
