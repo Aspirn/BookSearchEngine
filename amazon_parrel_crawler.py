@@ -35,6 +35,7 @@ def get_all_book_links(soup):
 
     for i in soup.findAll('li', {'class': 's-result-item celwidget '}):
         try:
+            print '###'
             book_tag = i.find('a', {'class': 'a-link-normal a-text-normal'})
             book_page = book_tag.get('href', '')
             print 'HERE IS HREF: ', book_page
@@ -42,6 +43,7 @@ def get_all_book_links(soup):
             print '#COUNT: ', count
             add_page_to_folder(book_page)
             print '&Add to file: ', book_page, 'DONE'
+            time.sleep(2)
         except:
             pass
             
