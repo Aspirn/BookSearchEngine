@@ -9,9 +9,9 @@ def CalcRGB(img):
 	r = numpy.sum(r)
 	all  = b + g + r
 	res = [0.0,0.0,0.0]
-	res[0] = (b+0.0) / all
-	res[1] = (g+0.0) / all
-	res[2] = (r+0.0) / all
+	res[0] = (b + 0.0) / all
+	res[1] = (g + 0.0) / all
+	res[2] = (r + 0.0) / all
 	return res
 
 def CalcP(imgurl):
@@ -105,7 +105,7 @@ def Search_LSH(imgurl, files, allHash, allHashFileID, allP,Sub):
 	res.sort(lambda x, y : cmp(x[1], y[1]), reverse = True)
 	return res
 
-def Search_NN(imgurl,Sub,allP):
+def Search_backup(imgurl,Sub,allP):
 
 	res = []
 	p = CalcP(imgurl)
@@ -140,6 +140,7 @@ def main():
         numpy.save(folder + 'allP.npy', allP)
         print 'Initialized...'
     else:
+    	print 'Initializing...'
         files = numpy.load(folder + 'files.npy')
         files = files.tolist()
         allHash = numpy.load(folder + 'allHash.npy')
@@ -155,8 +156,8 @@ def main():
         print '\nresult for ', imgurl.split('/')[1]
         res = Search_LSH(imgurl, files, allHash, allHashFileID, allP, Sub)
         if len(res) <= 1:
-            res += Search_NN(imgurl,Sub,allP)
-            res.sort(lambda x,y:cmp(x[1],y[1]),reverse=True)
+            res += Search_backup(imgurl,Sub,allP)
+            res.sort(lambda x, y : cmp(x[1], y[1]), reverse = True)
         
         print res[0][0]
         if res[0][0].split('.')[0] == imgurl.split('/')[1].split('.')[0]:
