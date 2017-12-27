@@ -1,6 +1,7 @@
 import cv2
 import numpy
 import os
+import scored_SIFT as ss
 
 def CalcRGB(img):
 	b, g, r = cv2.split(img)
@@ -101,7 +102,7 @@ def Search_LSH(imgurl, files, allHash, allHashFileID, allP,Sub):
 	ind = allHash.index(lsh)
 
 	for i in allHashFileID[ind]:
-		res.append((files[i].split('.')[0], CalcSimilarity(p, allP[i])))
+		res.append([files[i].split('.')[0], CalcSimilarity(p, allP[i]), files[i]])
 	res.sort(lambda x, y : cmp(x[1], y[1]), reverse = True)
 	return res
 
@@ -112,56 +113,69 @@ def Search_backup(imgurl,Sub,allP):
 	files = os.listdir('dataset')
 	for i in range(len(files)):
 		imgurl = 'dataset/' + files[i]
-		res.append((files[i].split('.')[0],CalcSimilarity(p,allP[i])))
+		res.append([files[i].split('.')[0], CalcSimilarity(p,allP[i]), files[i]])
 	res.sort(lambda x,y:cmp(x[1],y[1]),reverse=True)
 	return res
 
 def main():
 
-    print 'Program is starting...'
+	print 'Program is starting...'
 
-    imgs = []
-    imglist = os.listdir('testset')
-    for img in imglist:
-        imgs.append('testset/' + img)
-    Sub = [2,4,9,11,13,21]
+	imgs = []
+	imglist = os.listdir('testset')
+	for img in imglist:
+		imgs.append('testset/' + img)
+	Sub = [2,4,9,11,13,21]
 
-    Allcnt = len(imglist)
-    passcnt = 0.0
-    print 'Update trained data?(Y/N)'
-    tmp = raw_input()
-    folder = 'Bindata/'
-    if tmp == 'Y' or tmp == 'y':
-        print 'Initializing...'
-        files, allHash, allHashFileID, allP = Initializing(Sub)
-        numpy.save(folder + 'files.npy', files)
-        numpy.save(folder + 'allHash.npy', allHash)
-        numpy.save(folder + 'allHashFileID.npy', allHashFileID)
-        numpy.save(folder + 'allP.npy', allP)
-        print 'Initialized...'
-    else:
-    	print 'Initializing...'
-        files = numpy.load(folder + 'files.npy')
-        files = files.tolist()
-        allHash = numpy.load(folder + 'allHash.npy')
-        allHash = allHash.tolist()
-        allHashFileID = numpy.load(folder + 'allHashFileID.npy')
-        allHashFileID = allHashFileID.tolist()
-        allP = numpy.load(folder + 'allP.npy')
-        allP = allP.tolist()
-        print 'Initialized...'
+	Allcnt = len(imglist)
+	passcnt = 0.0
+	print 'Update trained data?(Y/N)'
+	tmp = raw_input()
+	folder = 'Bindata/'
+	if tmp == 'Y' or tmp == 'y':
+		print 'Initializing...'
+		files, allHash, allHashFileID, allP = Initializing(Sub)
+		numpy.save(folder + 'files.npy', files)
+		numpy.save(folder + 'allHash.npy', allHash)
+		numpy.save(folder + 'allHashFileID.npy', allHashFileID)
+		numpy.save(folder + 'allP.npy', allP)
+		print 'Initialized...'
+	else:
+		print 'Initializing...'
+		files = numpy.load(folder + 'files.npy')
+		files = files.tolist()
+		allHash = numpy.load(folder + 'allHash.npy')
+		allHash = allHash.tolist()
+		allHashFileID = numpy.load(folder + 'allHashFileID.npy')
+		allHashFileID = allHashFileID.tolist()
+		allP = numpy.load(folder + 'allP.npy')
+		allP = allP.tolist()
+		print 'Initialized...'
 
-    for imgurl in imgs:
+	for imgurl in imgs:
 
-        print '\nresult for ', imgurl.split('/')[1]
-        res = Search_LSH(imgurl, files, allHash, allHashFileID, allP, Sub)
-        if len(res) <= 1:
-            res += Search_backup(imgurl,Sub,allP)
-            res.sort(lambda x, y : cmp(x[1], y[1]), reverse = True)
-        
-        print res[0][0]
-        if res[0][0].split('.')[0] == imgurl.split('/')[1].split('.')[0]:
-            passcnt += 1
-    
-    print 'right / all =', passcnt / Allcnt * 100, '%'
+		print '\nresult for ', imgurl.split('/')[1]
+		res = Search_LSH(imgurl, files, allHash, allHashFileID, allP, Sub)
+		
+		testing_img = cv2.imread(imgurl)
+		
+		if len(res) <= 1:
+			res += Search_backup(imgurl,Sub,allP)
+			res.sort(lambda x, y : cmp(x[1], y[1]), reverse = True)
+			# res.sort(lambda x, y : cmp(ss.match(testing_img, cv2.imread(x[1])), ss.match(testing_img, cv2.imread(y[1]))), reverse = True)
+		# print len(res)
+		# for i in range(len(res)):
+		# 	print res[i][2]
+		# 	source_img = cv2.imread('dataset/' + res[i][2])
+		# 	res[i][1] = ss.match(testing_img, source_img)
+		# 	print 'result for ' + imgurl + ' and ' + res[i][2] + ' is  ' + str(res[i][1])
+		
+		# for i in res:
+		# 	print i[0]
+		print res[0][0]
+		if res[0][0].split('.')[0] == imgurl.split('/')[1].split('.')[0]:
+			passcnt += 1
+
+	print 'Ratio =', passcnt / Allcnt * 100, '%'
+
 main()
