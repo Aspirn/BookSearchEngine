@@ -27,12 +27,14 @@ def get_page(page):
     return content
 
 
-def get_douban(isbn):
+def get_library_info(isbn):
 
     start = time.time() # There's some problems with time.clock()
-    seed1 = 'http://opac.lib.sjtu.edu.cn/F/BJ1SYKABU396YF65SG67M48VKN2LURBGL95QMVL6KH4P43ECFJ-11437?func=find-b&request='
+    seed1 = 'http://opac.lib.sjtu.edu.cn/F?func=find-b&request='
     seed2 = '&find_code=WRD&adjacent=Y&local_base=SJT01&x=0&y=0'
     crawled = []
+    if type(isbn) != 'String':
+        isbn = str(isbn)
     seed = seed1 + isbn + seed2
     q = Queue.Queue()
     # Start to get book page
@@ -62,10 +64,7 @@ def get_douban(isbn):
     for i in List:
         for j in i:
             print j.encode('utf-8')
+
     end = time.time()
     print end-start, 's'
-
-
-isbn = raw_input()
-get_douban(isbn)
-
+    return List # 返回包含图书各方面信息的List
