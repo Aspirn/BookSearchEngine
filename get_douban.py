@@ -24,20 +24,24 @@ def get_page(page):
     return content
 
 
-def get_douban(isbn):
+def get_douban(isbn): # 获取豆瓣上的一些基本信息
 
     start = time.time() # There's some problems with time.clock()
     seed = 'https://api.douban.com/v2/book/isbn/'# sys.argv[1]
     crawled = []
     count = 0
+    if type(isbn) != 'String':
+        isbn = str(isbn)
     seed = seed + isbn
     q = Queue.Queue()
     #Start to get book page
-    print json.loads(get_page(seed))['author'][0].encode('utf-8')
-
+    List = []
+    json_tmp = json.loads(get_page(seed))
+    List.append(json_tmp['summary'].encode('utf-8')) # 概要
+    List.append(json_tmp['rating']['average'].encode('utf-8')) # 评分
+    List.append(json_tmp['rating']['numRaters']) # 评分人数
+    List.append(json_tmp['catalog'].encode('utf-8')) # 章节
+ 
     end = time.time()
     print end-start, 's'
-
-
-isbn = raw_input()
-get_douban(isbn)
+    return List
