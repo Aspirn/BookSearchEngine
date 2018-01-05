@@ -20,8 +20,9 @@ chmod +x make.sh
 
 ## note
 - book information is crawled from amazon, dangdang and jingdong.
-- book names, authors, prices, pictures and comments are extracted from html files
-- trained data matrix is stored in VGG_imagenet.npy
+- comment information is gotten from douban.
+- we are connected to SJTU library to know whether it can be borrowed.
+- trained data matrix is stored in VGG_imagenet.npy.
 
 ## acknowledgements
 - the classification part of OCR is forked from <a href = "https://github.com/chineseocr/chinese-ocr">chinese-ocr</a>
