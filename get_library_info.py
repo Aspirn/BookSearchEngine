@@ -26,7 +26,6 @@ def get_page(page):
         pass
     return content
 
-
 def get_library_info(isbn):
 
     start = time.time() # There's some problems with time.clock()
@@ -47,7 +46,6 @@ def get_library_info(isbn):
 
     
     content = get_page(url)
-    # print content
 
     soup2 = BeautifulSoup(content, "html5lib")
     table = soup2.find('table', {'border': '0', 'cellspacing' : '2', 'width' : '1000'})
@@ -60,13 +58,8 @@ def get_library_info(isbn):
         for td in tr.findAll('td'):
             tmp.append(td.get_text())
         List.append(tmp)
-    
-    for i in List:
-        for j in i:
-            print j.encode('utf-8')
+    List.append(seed1 + isbn + seed2)
 
     end = time.time()
     print end-start, 's'
-    return List # 返回包含图书各方面信息的List
-
-print get_library_info('9787040069938')
+    return List

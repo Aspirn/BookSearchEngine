@@ -120,9 +120,14 @@ def find_bbox(url):
     options["detect_language"] = "true"
     options["probability"] = "true"
 
-
-    return client.basicGeneral(image, options)['words_result'][0]['words'].encode('utf-8') + client.basicGeneral(image2, options)['words_result'][0]['words'].encode('utf-8')
-
+    print('###', client.basicGeneral(image, options))
+    try:
+        return client.basicGeneral(image, options)['words_result'][0]['words'].encode('utf-8') + client.basicGeneral(image2, options)['words_result'][0]['words'].encode('utf-8')
+    except:
+        try:
+            return client.basicGeneral(image, options)['words_result'][0]['words'].encode('utf-8')
+        except:
+            return client.basicGeneral(image2, options)['words_result'][0]['words'].encode('utf-8')
 
 if os.path.exists("results/"):
     shutil.rmtree("results/")
@@ -155,3 +160,14 @@ for i in range(2):
 # url = os.path.join(url)
 # print(url)
 # find_bbox(url)
+
+
+
+
+
+### {u'log_id': 3877553716130621000, u'direction': 0, u'words_result_num': 1, u'words_result': [{u'words': u'\u5b66\u7269\u7406', u'probability': {u'variance': 1e-06, u'average': 0.998848, u'min': 0.997186}}], u'language': -1}
+### {u'log_id': 1071110066153489474, u'direction': 0, u'words_result_num': 1, u'words_result': [{u'probability': {u'variance': 2.1e-05, u'average': 0.99758, u'min': 0.987327}, u'words': u'\u5927\u5b66\u7269\u7406\u6559\u7a0b'}], u'language': 3}
+
+
+[{u'words': u'\u5b66\u7269\u7406', u'probability': {u'variance': 1e-06, u'average': 0.998848, u'min': 0.997186}}]
+[{u'probability': {u'variance': 2.1e-05, u'average': 0.99758, u'min': 0.987327}, u'words': u'\u5927\u5b66\u7269\u7406\u6559\u7a0b'}]
