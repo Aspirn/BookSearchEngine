@@ -1,3 +1,8 @@
+# -*- coding:utf-8 -*-
+'''
+from ctpn.test import find_bbox as fb
+然后使用只需要fb(图片的url)即可返回识别到的文字
+'''
 from __future__ import print_function
 import tensorflow as tf
 import numpy
@@ -99,6 +104,26 @@ def find_bbox(url):
     ctpn(sess, net, url)  
 
 
+    image = get_file_content(os.getcwd() + '/data/results/test1.png')
+    image2 = get_file_content(os.getcwd() + '/data/results/test2.png')
+
+
+    APP_ID = '10634722'
+    API_KEY = '9T9pkzckvioQ9pocGHLPnaBd'
+    SECRET_KEY = 'ULMstHiUUKRRheOGrBnZRi5DjGHtVNzx'
+
+    client = AipOcr(APP_ID, API_KEY, SECRET_KEY)
+
+    options = {}
+    options["language_type"] = "CHN_ENG"
+    options["detect_direction"] = "true"
+    options["detect_language"] = "true"
+    options["probability"] = "true"
+
+
+    return client.basicGeneral(image, options)['words_result'][0]['words'].encode('utf-8') + client.basicGeneral(image2, options)['words_result'][0]['words'].encode('utf-8')
+
+
 if os.path.exists("results/"):
     shutil.rmtree("results/")
 os.makedirs("results/")
@@ -126,27 +151,7 @@ im = 128 * numpy.ones((300, 300, 3), dtype = numpy.uint8)
 for i in range(2):
     _, _ = test_ctpn(sess, net, im)
 
-url = raw_input()
-url = os.path.join(url)
-print(url)
-find_bbox(url)
-
-
-image = get_file_content(os.getcwd() + '/data/results/test1.png')
-image2 = get_file_content(os.getcwd() + '/data/results/test2.png')
-
-
-APP_ID = '10634722'
-API_KEY = '9T9pkzckvioQ9pocGHLPnaBd'
-SECRET_KEY = 'ULMstHiUUKRRheOGrBnZRi5DjGHtVNzx'
-
-client = AipOcr(APP_ID, API_KEY, SECRET_KEY)
-
-options = {}
-options["language_type"] = "CHN_ENG"
-options["detect_direction"] = "true"
-options["detect_language"] = "true"
-options["probability"] = "true"
-
-
-print(client.basicGeneral(image, options)['words_result'][0]['words'].encode('utf-8') + client.basicGeneral(image2, options)['words_result'][0]['words'].encode('utf-8'))
+# url = raw_input()
+# url = os.path.join(url)
+# print(url)
+# find_bbox(url)

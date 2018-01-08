@@ -68,3 +68,5 @@ def get_library_info(isbn):
     end = time.time()
     print end-start, 's'
     return List # 返回包含图书各方面信息的List
+
+print get_library_info('9787040069938')
