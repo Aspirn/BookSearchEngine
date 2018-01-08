@@ -22,7 +22,11 @@ chmod +x make.sh
 - book information is crawled from amazon, dangdang and jingdong.
 - comment information is gotten from douban.
 - we are connected to SJTU library to know whether it can be borrowed.
-- trained data matrix is stored in VGG_imagenet.npy.
+
+## structure
+- crawler and index related codes are stored in <i>crawler</i>.
+- datum crawled is not included in this repository
+- image recognition codes are stored in <i>ctpn</i>(lsh and sift and some other stuff is not related to ctpn. It's just for conveniance to put them all in it).Other neural network related files are in <i>checkpoints, crnn, data, img, lib, ocr, prepare_training_data and train</i>
 
 ## acknowledgements
 - the classification part of OCR is forked from <a href = "https://github.com/chineseocr/chinese-ocr">chinese-ocr</a>
