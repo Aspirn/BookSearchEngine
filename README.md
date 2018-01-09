@@ -1,4 +1,4 @@
-# EE208-Teamproject
+﻿# EE208-Teamproject
 
 A search engine based on text and image search for better book searching experience
 Team member : Bing Han, Guandong Lu, Yong Mao
@@ -19,6 +19,7 @@ cd lib/utils
 chmod +x make.sh
 ./make.sh
 ```
+- run mysite.py and browse localhost:8080
 
 ## ctpn train process
 - trained on GTX 1070��driver version Nvidia 388.59 WHQL(from Nvidia-smi)
