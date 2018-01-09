@@ -2,10 +2,10 @@
 import web
 from web import form
 import re
-import os,sys
+import os, sys
 import SearchFiles_JD
-from get_library_info import get_library_info as gli
-from get_douban import get_douban as gd
+from crawler.get_library_info import get_library_info as gli
+from crawler.get_douban import get_douban as gd
 from ctpn.test import find_bbox as fb
 urls = (
 	'/','index',
