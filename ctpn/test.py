@@ -9,7 +9,7 @@ import numpy
 import os, sys, cv2
 import glob
 import shutil
-sys.path.append(os.getcwd())
+sys.path.append(os.getcwd()) # 下方导入全都来自项目根目录lib文件夹，若要单独运行该文件，请务必在根目录运行command line
 from lib.networks.factory import get_network
 from lib.fast_rcnn.config import cfg,cfg_from_file
 from lib.fast_rcnn.test import test_ctpn
@@ -101,7 +101,7 @@ def find_bbox(url):
     #     ctpn(sess, net, im_name)
     print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
     print('Demo for ', url)
-    ctpn(sess, net, url)  
+    ctpn(sess, net, url) # 使用训练好的模型检测文本位置
 
 
     image = get_file_content(os.getcwd() + '/data/results/test1.png')
@@ -120,8 +120,8 @@ def find_bbox(url):
     options["detect_language"] = "true"
     options["probability"] = "true"
 
-    print('###', client.basicGeneral(image, options))
-    try:
+    print('###', client.basicGeneral(image, options)) # 仅用于控制台调试
+    try: # 排除一张图像中没有识别到文字的情况
         return client.basicGeneral(image, options)['words_result'][0]['words'].encode('utf-8') + client.basicGeneral(image2, options)['words_result'][0]['words'].encode('utf-8')
     except:
         try:
@@ -160,14 +160,3 @@ for i in range(2):
 # url = os.path.join(url)
 # print(url)
 # find_bbox(url)
-
-
-
-
-
-### {u'log_id': 3877553716130621000, u'direction': 0, u'words_result_num': 1, u'words_result': [{u'words': u'\u5b66\u7269\u7406', u'probability': {u'variance': 1e-06, u'average': 0.998848, u'min': 0.997186}}], u'language': -1}
-### {u'log_id': 1071110066153489474, u'direction': 0, u'words_result_num': 1, u'words_result': [{u'probability': {u'variance': 2.1e-05, u'average': 0.99758, u'min': 0.987327}, u'words': u'\u5927\u5b66\u7269\u7406\u6559\u7a0b'}], u'language': 3}
-
-
-[{u'words': u'\u5b66\u7269\u7406', u'probability': {u'variance': 1e-06, u'average': 0.998848, u'min': 0.997186}}]
-[{u'probability': {u'variance': 2.1e-05, u'average': 0.99758, u'min': 0.987327}, u'words': u'\u5927\u5b66\u7269\u7406\u6559\u7a0b'}]
