@@ -49,7 +49,7 @@ def run(searcher, analyzer,command, judge):
             query = QueryParser(Version.LUCENE_CURRENT, "name",
                             analyzer).parse(i)
             querys.setBoost(math.sqrt(len(i)))
-            querys.add(query, BooleanClause.Occur.MUST)
+            querys.add(query, BooleanClause.Occur.MUST)          #分词匹配
             querys1.add(query, BooleanClause.Occur.SHOULD)
         scoreDocs = searcher.search(querys, 50).scoreDocs
         if len(scoreDocs) == 0:
@@ -58,14 +58,14 @@ def run(searcher, analyzer,command, judge):
                 for j in i:
                     query = QueryParser(Version.LUCENE_CURRENT, "not_seg",
                                     analyzer).parse(j)
-                    querys.add(query, BooleanClause.Occur.MUST)
+                    querys.add(query, BooleanClause.Occur.MUST)   #逐字匹配
                     querys1.add(query, BooleanClause.Occur.SHOULD)
             scoreDocs = searcher.search(querys, 50).scoreDocs
         for i in commands:
         	query = QueryParser(Version.LUCENE_CURRENT, "comment",
                             		analyzer).parse(i)
         	query.setBoost(0.5)
-        	querys2.add(query, BooleanClause.Occur.SHOULD)
+        	querys2.add(query, BooleanClause.Occur.SHOULD)    #评论匹配
         if len(commands) > 1:
             querys2.add(querys1, BooleanClause.Occur.MUST)
         querys2.add(querys, BooleanClause.Occur.SHOULD)
@@ -73,8 +73,8 @@ def run(searcher, analyzer,command, judge):
         for i in commands_notseg:
         	query = QueryParser(Version.LUCENE_CURRENT, "type",
                             analyzer).parse(i)
-        	query.setBoost(1.1)
-        	querys.add(query, BooleanClause.Occur.SHOULD)
+        	query.setBoost(2)
+        	querys.add(query, BooleanClause.Occur.SHOULD)     #标签匹配
         	
         if len(commands_notseg) > 1:
             querys.add(querys1, BooleanClause.Occur.MUST)
@@ -94,7 +94,7 @@ def run(searcher, analyzer,command, judge):
         if judge == True:
             for i in range(len(res)):
                 temp = res[i]
-                tempres = main(temp[0], False)
+                tempres = main(temp[0], False)       #迭代寻找相似书籍
                 if len(tempres) >= 4:
                     for j in tempres[1:4]:
                         temp.append(j)
