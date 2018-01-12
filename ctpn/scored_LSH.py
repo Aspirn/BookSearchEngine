@@ -3,7 +3,7 @@ import numpy
 import os
 import scored_SIFT as ss
 
-def CalcRGB(img):
+def CalcRGB(img): # 计算RGB能量
 	b, g, r = cv2.split(img)
 	b = numpy.sum(b) 
 	g = numpy.sum(g)
@@ -15,7 +15,7 @@ def CalcRGB(img):
 	res[2] = (r + 0.0) / all
 	return res
 
-def CalcP(imgurl):
+def CalcP(imgurl): # 计算特征向量
     P = []
     img = cv2.imread(imgurl, 1)
     h = img.shape[0]
@@ -36,7 +36,7 @@ def CalcP(imgurl):
             P[i] = 2
     return P
 
-def CalcLSH(p,Sub):
+def CalcLSH(p,Sub): # 计算LSH
 
 	I = [[] for i in range(12)]
 
@@ -52,7 +52,7 @@ def CalcLSH(p,Sub):
 
 	return lsh
 
-def Initializing(Sub):
+def Initializing(Sub): # 初始化，读取文件、计算哈希等
 
 	files = os.listdir('dataset')
 	allHash = []
@@ -72,7 +72,7 @@ def Initializing(Sub):
 
 	return files, allHash, allHashFileID, allP
 
-def Normalize(vec):
+def Normalize(vec): # 正则化
 
 	res = [0.0] * 12
 	s = 0
@@ -84,7 +84,7 @@ def Normalize(vec):
 			res[i] = float(vec[i]) / s
 	return res
 
-def CalcSimilarity(A, B):
+def CalcSimilarity(A, B): # 通过点乘方式计算相似度
 	A = Normalize(A)
 	B = Normalize(B)
 	res = 0.0
@@ -92,7 +92,7 @@ def CalcSimilarity(A, B):
 		res += A[i] * B[i]
 	return res
 
-def Search_LSH(imgurl, files, allHash, allHashFileID, allP,Sub):
+def Search_LSH(imgurl, files, allHash, allHashFileID, allP,Sub): # 用LSH方式搜索
 
 	res = []
 	p = CalcP(imgurl)
@@ -106,7 +106,7 @@ def Search_LSH(imgurl, files, allHash, allHashFileID, allP,Sub):
 	res.sort(lambda x, y : cmp(x[1], y[1]), reverse = True)
 	return res
 
-def Search_backup(imgurl,Sub,allP):
+def Search_backup(imgurl,Sub,allP): # 暴力搜索
 
 	res = []
 	p = CalcP(imgurl)
@@ -132,7 +132,7 @@ def main():
 	print 'Update trained data?(Y/N)'
 	tmp = raw_input()
 	folder = 'Bindata/'
-	if tmp == 'Y' or tmp == 'y':
+	if tmp == 'Y' or tmp == 'y': # Y表示重新计算相关数据
 		print 'Initializing...'
 		files, allHash, allHashFileID, allP = Initializing(Sub)
 		numpy.save(folder + 'files.npy', files)
@@ -140,7 +140,7 @@ def main():
 		numpy.save(folder + 'allHashFileID.npy', allHashFileID)
 		numpy.save(folder + 'allP.npy', allP)
 		print 'Initialized...'
-	else:
+	else: # 否则就用预先计算好的保存在本地的npy文件的数据
 		print 'Initializing...'
 		files = numpy.load(folder + 'files.npy')
 		files = files.tolist()
