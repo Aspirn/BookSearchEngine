@@ -53,7 +53,7 @@ class result:
 		keyword = user_data.keywords
 		print keyword
 		
-		search_result = SearchFiles_JD.main(keyword)	#获得搜索结果
+		search_result = SearchFiles_JD.main(keyword, True)	#获得搜索结果
 		for i in range(len(search_result[0])):
 			print search_result[0][i]
 		return render.result(search_result)		#返回给结果界面
