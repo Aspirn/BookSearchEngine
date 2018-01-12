@@ -34,7 +34,7 @@ search query entered against the 'contents' field.  It will then display the
 search.close() is currently commented out because it causes a stack overflow in
 some cases.
 """
-def run(searcher, analyzer,command):
+def run(searcher, analyzer,command, judge):
 
         print "\nSearching for: " + command
         # command = unicode(command, 'UTF-8')
@@ -91,15 +91,25 @@ def run(searcher, analyzer,command):
                 temp.append(i)
             res.append(temp)
         res1 = []
-        for i in range(len(res)):
-            temp = res[i]
-            temp.append(res[(i * 3 + 1) % len(res)])
-            temp.append(res[(i * 4 + 1) % len(res)])
-            temp.append(res[(i * 5 + 1) % len(res)])
-            res1.append(temp)
+        if judge == True:
+            for i in range(len(res)):
+                temp = res[i]
+                tempres = main(temp[0], False)
+                if len(tempres) >= 4:
+                    for j in tempres[1:4]:
+                        temp.append(j)
+                elif len(tempres) == 1:
+                    for j in range(3):
+                        temp.append(tempres[0])
+                else:
+                    for j in range(1, len(tempres)):
+                        temp.append(tempres[j])
+                    for j in range(len(tempres), 4):
+                        temp.append(tempres[-1])
+                res1.append(temp)
         return res1
 
-def main(title):
+def main(title, judge):
     vm_env = lucene.getVMEnv()
     vm_env.attachCurrentThread()
     #base_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
@@ -107,7 +117,7 @@ def main(title):
     searcher = IndexSearcher(DirectoryReader.open(directory))
     analyzer = WhitespaceAnalyzer(Version.LUCENE_CURRENT)
     res = []
-    res = run(searcher, analyzer, title)
+    res = run(searcher, analyzer, title, judge)
     del searcher
     return res
 
